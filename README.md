@@ -4,6 +4,21 @@ Yo, welcome to my little corner of automation magic! This repo is packed with ba
 
 New to this? Kick off with Docker or Python basics. Pro tip: Always `sudo apt update && sudo apt upgrade` before jumping in.
 
+## Quick Start: Running These Scripts
+These scripts are plain text files, so they won't run right out of the box—they need execute permissions first. If you're new to this, here's how to make 'em runnable:
+
+1. Open your terminal in this directory.
+2. Make the script executable: `chmod +x script-name.sh`
+3. Run it: `./script-name.sh`
+
+Example for installing Docker:
+```
+chmod +x install-docker-n-compose.sh
+./install-docker-n-compose.sh
+```
+
+Boom! Now you're set. Most scripts will handle the rest, but always check the output for any manual steps.
+
 ## The Script Squad
 
 ### Docker & Compose
