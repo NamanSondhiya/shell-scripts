@@ -3,12 +3,10 @@ set -e
 echo "Jenkins Installation Script (Ubuntu/Debian)"
 sudo apt update && sudo apt upgrade -y
 
-# Installing Jenkins Dependency 
 echo "Installing OpenJDK 21..."
 sudo apt install -y openjdk-21-jdk
 java -version
 
-# Installing Jenkins
 echo "Adding Jenkins GPG key (2023)..."
 sudo mkdir -p /etc/apt/keyrings
 sudo wget -O /etc/apt/keyrings/jenkins-keyring.asc \
