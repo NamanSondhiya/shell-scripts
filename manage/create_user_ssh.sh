@@ -10,8 +10,13 @@ echo
 
 read -p "Enter username to create: " USERNAME
 
+if [[ ! "$USERNAME" =~ ^[a-z][-a-z0-9_]*$ ]]; then
+  echo "Error: Invalid username. Must start with lowercase letter and contain only lowercase letters, numbers, hyphens, and underscores."
+  exit 1
+fi
+
 if id "$USERNAME" &>/dev/null; then
-  echo "User already exists!"
+  echo "Error: User already exists!"
   exit 1
 fi
 
@@ -23,21 +28,21 @@ read -p "Other Info (optional): " OTHER
 
 echo
 echo "Creating user..."
-adduser --gecos "$FULLNAME,$ROOM,$WORKPHONE,$HOMEPHONE,$OTHER" "$USERNAME"
+adduser --gecos "$FULLNAME,$ROOM,$WORKPHONE,$HOMEPHONE,$OTHER" "$USERNAME" || exit 1
 
 echo
-echo "Set password for $USERNAME"
-passwd "$USERNAME"
-
-echo
-echo "Adding $USERNAME to sudo group..."
-usermod -aG sudo "$USERNAME"
+read -p "Add $USERNAME to sudo group? (y/N): " ADD_SUDO
+if [[ "$ADD_SUDO" =~ ^[Yy]$ ]]; then
+  echo "Adding $USERNAME to sudo group..."
+  usermod -aG sudo "$USERNAME" || echo "Warning: Failed to add to sudo group"
+fi
 
 if getent group docker > /dev/null 2>&1; then
-  echo "Adding $USERNAME to docker group..."
-  usermod -aG docker "$USERNAME"
-else
-  echo "Docker group not found. Skipping docker group assignment."
+  read -p "Add $USERNAME to docker group? (y/N): " ADD_DOCKER
+  if [[ "$ADD_DOCKER" =~ ^[Yy]$ ]]; then
+    echo "Adding $USERNAME to docker group..."
+    usermod -aG docker "$USERNAME" || echo "Warning: Failed to add to docker group"
+  fi
 fi
 
 echo
@@ -45,25 +50,25 @@ echo "Setting up SSH directory..."
 
 USER_HOME=$(eval echo "~$USERNAME")
 
-mkdir -p "$USER_HOME/.ssh"
-touch "$USER_HOME/.ssh/authorized_keys"
+mkdir -p "$USER_HOME/.ssh" || exit 1
+touch "$USER_HOME/.ssh/authorized_keys" || exit 1
 
-chown -R "$USERNAME:$USERNAME" "$USER_HOME/.ssh"
-chmod 700 "$USER_HOME/.ssh"
-chmod 600 "$USER_HOME/.ssh/authorized_keys"
+chown -R "$USERNAME:$USERNAME" "$USER_HOME/.ssh" || exit 1
+chmod 700 "$USER_HOME/.ssh" || exit 1
+chmod 600 "$USER_HOME/.ssh/authorized_keys" || exit 1
 
 echo
 echo "Opening nano to paste the public SSH key..."
 echo "Paste the key, then press CTRL+X -> Y -> ENTER"
-sleep 2
 
 nano "$USER_HOME/.ssh/authorized_keys"
 
+if [ ! -s "$USER_HOME/.ssh/authorized_keys" ]; then
+  echo
+  echo "Warning: No SSH key was added. User will need password authentication."
+fi
+
 echo
 echo "User $USERNAME created successfully!"
-echo "Added to sudo and docker groups."
-echo "SSH key added."
 echo
-
-echo "Switching to user for verification..."
-su - "$USERNAME"
+echo "To test SSH access, try: ssh $USERNAME@localhost"
