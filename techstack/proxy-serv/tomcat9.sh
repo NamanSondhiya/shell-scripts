@@ -42,12 +42,12 @@ Description=Apache Tomcat 9
 After=network.target
 
 [Service]
-Type=forking
+Type=exec
 User=tomcat9
 Group=tomcat9
 Environment="JAVA_HOME=/usr/lib/jvm/temurin-8-amd64"
 Environment="CATALINA_HOME=${INSTALL_DIR}"
-ExecStart=${INSTALL_DIR}/bin/startup.sh
+ExecStart=${INSTALL_DIR}/bin/catalina.sh run
 ExecStop=${INSTALL_DIR}/bin/shutdown.sh
 Restart=on-failure
 
