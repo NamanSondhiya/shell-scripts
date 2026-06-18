@@ -3,10 +3,10 @@
 set -e
 
 echo ""
-echo "Select Tomcat install method:"
-echo "  1) tomcat9  — apt (Ubuntu 22.04 only)"
-echo "  2) tomcat9  — manual from Apache archive (Ubuntu 24.04+)"
-echo "  3) tomcat10 — apt (Ubuntu 24.04, breaks javax.* WARs)"
+echo "select Tomcat variant"
+echo "  (1) tomcat9  — apt (Ubuntu 22.04 only)"
+echo "  (2) tomcat9  — manual from Apache archive (Ubuntu 24.04+)"
+echo "  (3) tomcat10 — apt (Ubuntu 24.04, breaks javax.* WARs)"
 echo ""
 read -rp "Choice [1/2/3]: " CHOICE
 
