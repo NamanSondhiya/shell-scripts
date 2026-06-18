@@ -18,7 +18,7 @@ if [[ "$UBUNTU_VERSION" == "24.04" ]] || [[ "${UBUNTU_VERSION%%.*}" -ge 24 ]]; t
 
     sudo apt-get update
     sudo apt-get install -y temurin-8-jdk
-    JAVA_HOME_PATH=/usr/lib/jvm/temurin-8-amd64
+    JAVA_HOME_PATH=/usr/lib/jvm/temurin-8-jdk-amd64
 else
     echo "Ubuntu 22.04 or earlier — installing from default repos"
     sudo apt install -y openjdk-8-jdk

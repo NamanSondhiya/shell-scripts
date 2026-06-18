@@ -13,7 +13,7 @@ After=network.target
 Type=exec
 User=tomcat9
 Group=tomcat9
-Environment="JAVA_HOME=/usr/lib/jvm/temurin-8-amd64"
+Environment="JAVA_HOME=/usr/lib/jvm/temurin-8-jdk-amd64"
 Environment="CATALINA_HOME=/opt/tomcat9"
 ExecStart=/opt/tomcat9/bin/catalina.sh run
 ExecStop=/opt/tomcat9/bin/shutdown.sh
