@@ -63,6 +63,8 @@ sudo tee /etc/systemd/system/promtail.service >/dev/null <<'EQF'
 Description=Promtail
 After=network.target
 [Service]
+MemoryMax=200M
+CPUQuota=50%
 User=root
 ExecStart=/usr/local/bin/promtail -config.file=/etc/promtail/config.yaml
 Restart=on-failure
