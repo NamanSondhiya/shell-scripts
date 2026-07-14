@@ -93,7 +93,8 @@ WantedBy=multi-user.target
 EQF
 
 sudo systemctl daemon-reload
-sudo systemctl enable --now promtail
+sudo systemctl enable promtail
+sudo systemctl restart promtail
 
 rm -f /tmp/promtail-linux-amd64.zip /tmp/promtail-linux-amd64
 
