@@ -42,20 +42,40 @@ scrape_configs:
           server: ${SERVER}
           __path__: /var/log/syslog
   - job_name: docker
-    static_configs:
-      - targets: [localhost]
-        labels:
-          job: docker
-          server: ${SERVER}
-          __path__: /var/lib/docker/containers/*/*-json.log
-    pipeline_stages:
-      - json:
-          expressions:
-            log: log
-            stream: stream
-      - output:
-          source:
-            log
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+        refresh_interval: 15s
+    relabel_configs:
+      - source_labels: ['__meta_docker_container_name']
+        regex: '/(.*)'
+        target_label: container
+      - source_labels: ['__meta_docker_container_log_stream']
+        target_label: stream
+      - replacement: '${SERVER}'
+        target_label: server
+      - replacement: docker
+        target_label: job
+  # - job_name: kafka-bridge
+  #   static_configs:
+  #     - targets: [localhost]
+  #       labels:
+  #         job: kafka-bridge
+  #         server: kafka-waters
+  #         __path__: /var/log/kafka-bridge.log
+    # static_configs:
+    #   - targets: [localhost]
+    #     labels:
+    #       job: docker
+    #       server: ${SERVER}
+    #       __path__: /var/lib/docker/containers/*/*-json.log
+    # pipeline_stages:
+    #   - json:
+    #       expressions:
+    #         log: log
+    #         stream: stream
+    #   - output:
+    #       source:
+    #         log
 EQF
 
 sudo tee /etc/systemd/system/promtail.service >/dev/null <<'EQF'
